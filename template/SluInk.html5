@@ -1,0 +1,119 @@
+<!--
+SPDX-License-Identifier: GPL-3.0-or-later
+Copyright (C) 2025 Manuel Regamey
+This file is part of SluInk. See the LICENSE file or <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="$lang$" $if(dir)$dir="$dir$" $endif$ data-theme="">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>$if(title-prefix)$$title-prefix$  $endif$$pagetitle$</title>
+  $for(author-meta)$
+  <meta name="author" content="$author-meta$" />$endfor$
+  $if(date-meta)$
+  <meta name="date" content="$date-meta$" />$endif$
+  $if(description)$
+  <meta name="description" content="$description$" />$endif$
+
+  <!-- Boot-script: applique le thème choisi avant de charger la CSS -->
+  <script>
+    (function () {
+      var key = 'SluInk-theme';
+      try {
+        var saved = localStorage.getItem(key);
+        var t = (saved === 'light' || saved === 'dark')
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+        document.documentElement.style.colorScheme = t; // scrollbars/UI natifs
+      } catch (e) { }
+    })();
+  </script>
+
+  $if(css_href)$
+  <link rel="stylesheet" href="$css_href$" />
+  $endif$
+
+  $if(highlighting-css)$
+  <style type="text/css">
+    $highlighting-css$
+  </style>
+  $endif$
+  $for(header-includes)$
+  $header-includes$
+  $endfor$
+
+  $if(js_href)$
+  <script src="$js_href$" defer></script>
+  $endif$
+</head>
+
+<body>
+
+  <header class="site">
+    <div class="brand">
+      <a href="$if(home_href)$$home_href$$else$index.html$endif$">
+        $if(site_title)$$site_title$$else$Documentation$endif$
+      </a>
+    </div>
+
+    <nav class="topnav">
+      $if(prev_href)$
+      <a class="nav-prev" href="$prev_href$">$if(prev_title)$$prev_title$$else$Précédent$endif$</a>
+      $endif$
+      <a class="nav-home" href="$if(home_href)$$home_href$$else$index.html$endif$">Accueil</a>
+      $if(next_href)$
+      <a class="nav-next" href="$next_href$">$if(next_title)$$next_title$$else$Suivant$endif$</a>
+      $endif$
+    </nav>
+
+    <div class="theme-buttons" role="group" aria-label="Thème" style="display:flex; gap:.5rem;">
+      <button class="button icon-btn" data-theme-set="light" aria-label="Clair" title="Clair">
+        <img src="$sun_href$" alt="sun" width="20" height="20" />
+      </button>
+      <button class="button icon-btn" data-theme-set="dark" aria-label="Sombre" title="Sombre">
+        <img src="$moon_href$" alt="moon" width="20" height="20" />
+      </button>
+      <button class="button icon-btn" data-theme-set="academic" aria-label="Academic" title="Academic">
+        <img src="$file_href$" alt="file" width="20" height="20" />
+      </button>
+    </div>
+
+
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      $if(toc)$
+      <nav aria-label="Sommaire">
+        $toc$
+      </nav>
+      $else$
+     
+      <nav><em>Document Racine</em></nav>
+      
+      $endif$
+    </aside>
+
+    <main class="content" id="content">
+      $if(title)$<h1 class="title">$title$</h1>$endif$
+      $if(subtitle)$<p class="subtitle">$subtitle$</p>$endif$
+      $for(author)$<p class="author">$author$</p>$endfor$
+      $if(date)$<p class="date">$date$</p>$endif$
+      $body$
+    </main>
+  </div>
+
+  <footer class="site">
+    $if(footer)$$footer$$else$Généré automatiquement avec Pandoc.$endif$
+  </footer>
+
+  $for(include-after)$
+  $include-after$
+  $endfor$
+</body>
+
+</html>
